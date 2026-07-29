@@ -911,6 +911,7 @@ function ModernConfigManager:createBottomButtons()
   -- Use custom buttons if provided, otherwise use defaults
   local buttons = #buttonsConfig > 0 and buttonsConfig or defaultButtons
 
+  self.buttons = {}
   for i, btnConfig in ipairs(buttons) do
     if btnConfig.callback then -- Only create button if it has a callback
       local uniqueName = self.configDef.name
@@ -921,6 +922,7 @@ function ModernConfigManager:createBottomButtons()
         width = btnConfig.width or "25%",
         height = buttonHeight
       }, self.container)
+      self.buttons[i] = btn
       btn:setFont(getFont())
       btn:setCursor("PointingHand")
       btn:echo(btnConfig.name)

@@ -227,22 +227,6 @@ local primaryConfigDefinition = {
       name = "Logging",
       items = {
         {
-          name = "Log Style",
-          key = "logStyle",
-          type = "dropdown",
-          default = "TXT",
-          options = {"TXT", "HTML"},
-          description = "Select which extension to log in",
-          icon = "📁",
-          onChange = function(value)
-            if value == "TXT" then
-              setConfig("logInHTML", false)
-            else
-              setConfig("logInHTML", true)
-            end
-          end
-        },
-        {
           name = "Enable Logging",
           key = "logging",
           type = "toggle",
@@ -255,6 +239,22 @@ local primaryConfigDefinition = {
               eventStartLogging(nil, true)
             else
               eventEndLogging(nil, true)
+            end
+          end
+        },
+        {
+          name = "Log Style",
+          key = "logStyle",
+          type = "dropdown",
+          default = "TXT",
+          options = {"TXT", "HTML"},
+          description = "Select which extension to log in",
+          icon = "📁",
+          onChange = function(value)
+            if value == "TXT" then
+              setConfig("logInHTML", false)
+            else
+              setConfig("logInHTML", true)
             end
           end
         },

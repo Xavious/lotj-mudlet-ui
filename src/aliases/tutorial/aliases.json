@@ -1,0 +1,7 @@
+[
+  {
+    "name": "lotj tutorial",
+    "regex": "^lotj tutorial$",
+    "script": "lotj.tutorial.run()"
+  }
+]
