@@ -279,7 +279,7 @@ function lotj.galaxyMap.addManualSystem(name, x, y)
 
   lotj.galaxyMap.recordSystem(name, x, y, true)
   lotj.galaxyMap.drawSystems()
-  lotj.galaxyMap.log("<green>Added manual system '"..name.."' at ("..x..", "..y..")")
+  lotj.galaxyMap.log("<reset>Added system '<green>"..name.."<reset>' at (<green>"..x..", "..y.."<reset>)")
 
   return true
 end
@@ -302,6 +302,9 @@ function lotj.galaxyMap.showHelp()
   cecho("  <yellow>gmap remove <system name><reset>\n")
   cecho("    Remove a manually added system from the map.\n")
   cecho("    Example: <yellow>gmap remove \"Unknown System\"<reset>\n")
+  echo("\n")
+  cecho("  <yellow>gmap clear<reset>\n")
+  cecho("    Remove all manually added systems from the map.\n")
   echo("\n")
 end
 
@@ -526,6 +529,24 @@ function lotj.galaxyMap.listManualSystems()
   end
 end
 
+-- Remove all manually added systems
+function lotj.galaxyMap.clearManualSystems()
+  local count = 0
+  for name, system in pairs(lotj.galaxyMap.data.systems or {}) do
+    if system.manual then
+      lotj.galaxyMap.data.systems[name] = nil
+      count = count + 1
+    end
+  end
+  if count == 0 then
+    lotj.galaxyMap.log("No manually added systems to remove.")
+    return
+  end
+  table.save(dataFileName, lotj.galaxyMap.data)
+  lotj.galaxyMap.drawSystems()
+  lotj.galaxyMap.log("<reset>Removed <red>" .. count .. " <reset>manually added system" .. (count == 1 and "" or "s") .. ".")
+end
+
 -- Remove a manually added system
 function lotj.galaxyMap.removeManualSystem(name)
   if not lotj.galaxyMap.data.systems[name] then
@@ -542,7 +563,7 @@ function lotj.galaxyMap.removeManualSystem(name)
   table.save(dataFileName, lotj.galaxyMap.data)
   lotj.galaxyMap.drawSystems()
 
-  lotj.galaxyMap.log("<green>Removed manual system '"..name.."'")
+  lotj.galaxyMap.log("<reset>Removed system '<red>"..name.."<reset>'")
   return true
 end
 

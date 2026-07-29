@@ -20,5 +20,10 @@
   {
     "name": "gmap-remove",
     "regex": "^gmap remove (.+)$"
+  },
+  {
+    "name": "gmap-clear",
+    "regex": "^gmap clear$",
+    "script": "lotj.galaxyMap.clearManualSystems()"
   }
 ]
