@@ -160,6 +160,7 @@ lotj.setup.registerEventHandler("sysInstallPackage", function(_, pkgName)
 
   if pkgName ~= "@PKGNAME@" then return end
   sendGMCP("Core.Supports.Set", "[\"Ship 1\"]")
+  sendGMCP("Core.Supports.Set", "[\"Galaxy 1\"]")
   doSetup()
 end)
 
@@ -171,5 +172,6 @@ end)
 lotj.setup.registerEventHandler("sysProtocolEnabled", function(_, protocol)
   if protocol == "GMCP" then
     sendGMCP("Core.Supports.Set", "[\"Ship 1\"]")
+    sendGMCP("Core.Supports.Set", "[\"Galaxy 1\"]")
   end
 end)

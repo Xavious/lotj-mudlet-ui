@@ -150,6 +150,7 @@ function lotj.galaxyMap.setup()
 
   lotj.setup.registerEventHandler("gmcp.Ship.System", lotj.galaxyMap.setShipGalCoords)
   lotj.setup.registerEventHandler("gmcp.Room.Info", lotj.galaxyMap.setCurrentPlanet)
+  lotj.setup.registerEventHandler("gmcp.Galaxy.Planets", lotj.galaxyMap.gmcpToSysData)
   -- This seems necessary when recreating the UI after upgrading the package.
   lotj.galaxyMap.container:raiseAll()
 end
@@ -158,6 +159,53 @@ end
 
 function lotj.galaxyMap.log(text)
   cecho("[<cyan>LOTJ Galaxy Map<reset>] "..text.."\n")
+end
+
+-- Wroona = {
+--   government = "",
+--   system = "Wroona System",
+--   x = 71,
+--   y = 23
+-- }
+--
+-- ["Wroona System"] = {
+--   gov = "Blue",
+--   manual = false,
+--   name = "Wroona System",
+--   planets = { "Wroona" },
+--   x = 29,
+--   y = 35
+-- }
+function lotj.galaxyMap.gmcpToSysData()
+  local gmcp_data = gmcpVarByPath("Galaxy.Planets") or {}
+  if next(gmcp_data) == nil then return end
+
+  local systems = {}
+  for planetName, planetData in pairs(gmcp_data) do
+    systems[planetData.system] = systems[planetData.system] or {
+      gov = planetData.government,
+      manual = false,
+      name = planetData.system,
+      planets = {},
+      x = planetData.x,
+      y = planetData.y
+    }
+    -- table.insert(systems[planetData.system].planets, planetName)
+  end
+
+  for systemName, systemData in pairs(systems) do
+    lotj.galaxyMap.data.systems[systemName] = table.deepcopy(systemData)
+  end
+
+  for planetName, planetData in pairs(gmcp_data) do
+    lotj.galaxyMap.recordPlanet({
+      gov = planetData.government,
+      name = planetName,
+      system = planetData.system
+    })
+  end
+
+  lotj.galaxyMap.drawSystems()
 end
 
 function lotj.galaxyMap.setShipGalCoords()
