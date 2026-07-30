@@ -182,19 +182,7 @@ function lotj.galaxyMap.gmcpToSysData()
 
   local systems = {}
   for planetName, planetData in pairs(gmcp_data) do
-    systems[planetData.system] = systems[planetData.system] or {
-      gov = planetData.government,
-      manual = false,
-      name = planetData.system,
-      planets = {},
-      x = planetData.x,
-      y = planetData.y
-    }
-    -- table.insert(systems[planetData.system].planets, planetName)
-  end
-
-  for systemName, systemData in pairs(systems) do
-    lotj.galaxyMap.data.systems[systemName] = table.deepcopy(systemData)
+    lotj.galaxyMap.recordSystem(planetData.system, planetData.x, planetData.y, false)
   end
 
   for planetName, planetData in pairs(gmcp_data) do
@@ -616,25 +604,25 @@ function lotj.galaxyMap.removeManualSystem(name)
 end
 
 function lotj.galaxyMap.recordPlanet(planetData)
-  if not lotj.galaxyMap.data.planets[planetData.name] then
-    lotj.galaxyMap.data.planets[planetData.name] = {
-      name = planetData.name,
-      gov = planetData.gov,
-      system = planetData.system,
-    }
+  lotj.galaxyMap.data.planets[planetData.name] = {
+    name = planetData.name,
+    gov = planetData.gov,
+    system = planetData.system,
+  }
 
-    local system = lotj.galaxyMap.data.systems[planetData.system]
-    if system ~= nil then
-      system.gov = planetData.gov
+  local system = lotj.galaxyMap.data.systems[planetData.system]
+  if system ~= nil then
+    system.gov = planetData.gov
+    if not table.contains(system.planets, planetData.name) then
       table.insert(system.planets, planetData.name)
-    else
-      lotj.galaxyMap.log("Unable to find system "..planetData.system.." for planet "..planetData.name.."\n")
     end
+  else
+    lotj.galaxyMap.log("Unable to find system "..planetData.system.." for planet "..planetData.name.."\n")
+  end
 
-    if lotj.galaxyMap.data.govToColor[planetData.gov] == nil then
-      govColorIdx = govColorIdx+1
-      lotj.galaxyMap.data.govToColor[planetData.gov] = govColorList[govColorIdx]
-    end
+  if lotj.galaxyMap.data.govToColor[planetData.gov] == nil then
+    govColorIdx = govColorIdx+1
+    lotj.galaxyMap.data.govToColor[planetData.gov] = govColorList[govColorIdx]
   end
 
   if planetData.coords ~= nil then
@@ -978,7 +966,7 @@ function lotj.galaxyMap.coordRange()
   local maxX = 0
   local minY = 0
   local maxY = 0
-  
+
   for _, system in pairs(lotj.galaxyMap.data.systems) do
     if minX > system.x then
       minX = system.x
@@ -993,7 +981,7 @@ function lotj.galaxyMap.coordRange()
       maxY = system.y
     end
   end
-  
+
   -- Pad all values by 10 to ensure points are displayed reasonably.
   return minX-10, maxX+10, minY-10, maxY+10
 end
