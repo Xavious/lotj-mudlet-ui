@@ -724,6 +724,11 @@ local function systemDisplayName(system)
 end
 
 function lotj.galaxyMap.drawSystems()
+  if lotj.layout and lotj.layout.upperRightTabData and lotj.layout.upperRightTabData.selectedTab ~= "galaxy" then
+    lotj.galaxyMap.pendingDraw = true
+    return
+  end
+  lotj.galaxyMap.pendingDraw = false
   lotj.chat.debugLog("lotj.galaxyMap.drawSystems() call.")
   local minX, _, _, maxY = lotj.galaxyMap.coordRange()
   local xOffset, yOffset, pxPerCoord, pxPerCoordX = lotj.galaxyMap.calculateSizing()

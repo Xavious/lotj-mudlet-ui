@@ -78,7 +78,7 @@ end
 -- Reserved words are Char, Room, Ship, External, Client
 function lotj.chat.debugLog(type_)
   if not (lotj.settings.debugMode and lotj.chat["debug"]) then return end
-  if table.contains({"Char", "Room", "External", "Client", "Ship"}, type_) and not lotj.settings.debugGMCP_out then return end
+  if table.contains({"Char", "Room", "External", "Client", "Ship", "Galaxy"}, type_) and not lotj.settings.debugGMCP_out then return end
   lotj.chat["debug"]:cecho("<reset><green>"..getTime(true, "hh:mm:ss").."<reset> "..type_.."\n")
   if gmcp[type_] and lotj.settings.debugGMCP_out then
     lotj.chat["debug"]:display(gmcp[type_])

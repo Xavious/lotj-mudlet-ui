@@ -47,6 +47,9 @@ end
 local function debugClient()
   lotj.chat.debugLog("Client")
 end
+local function debugGalaxy()
+  lotj.chat.debugLog("Galaxy")
+end
 
 local function saveData()
   if lotj and lotj.mapper and lotj.configTable then
@@ -113,6 +116,7 @@ local function doSetup()
   lotj.setup.registerEventHandler("gmcp.Ship", debugShip)
   lotj.setup.registerEventHandler("gmcp.External", debugExternal)
   lotj.setup.registerEventHandler("gmcp.Client", debugClient)
+  lotj.setup.registerEventHandler("gmcp.Galaxy", debugGalaxy)
 
   -- Event handler for saving data on profile close
   -- lotj.setup.registerEventHandler("sysDisconnectionEvent", saveData) -- We do not save data on disconnect so dynamic settings are not shared between quick character swaps
