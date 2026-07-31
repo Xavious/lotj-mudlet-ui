@@ -533,6 +533,11 @@ end
 -- TODO:
 -- Even if there is no GMCP data, we should still draw the player's location
 function lotj.galaxyMap.drawSystems()
+  if lotj.layout and lotj.layout.upperRightTabData and lotj.layout.upperRightTabData.selectedTab ~= "galaxy" then
+    lotj.galaxyMap.pendingDraw = true
+    return
+  end
+  lotj.galaxyMap.pendingDraw = false
   local gmcp_data = gmcpVarByPath("Galaxy.Planets") or {}
   if next(gmcp_data) == nil then
     if not io.exists(gmcpDataFileName) then
