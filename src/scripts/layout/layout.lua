@@ -127,6 +127,11 @@ function lotj.layout.selectTab(tabData, tabName)
   lotj.layout.markTabRead(tabData, tabName)
   tabData.contents[tabName]:show()
   -- if tabName == "settings" then lotj.configWindow:show() end
+  if tabData == lotj.layout.upperRightTabData and tabName == "galaxy" then
+    if lotj.galaxyMap and lotj.galaxyMap.pendingDraw then
+      lotj.galaxyMap.drawSystems()
+    end
+  end
 end
 
 function lotj.layout.markTabUnread(tabData, tabName)

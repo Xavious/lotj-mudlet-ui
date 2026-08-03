@@ -3,11 +3,11 @@
     "name": "clickable_changes",
     "patterns": [
       {
-        "pattern": "^\\((\\d+)\\).+on.+by.+$",
+        "pattern": "^\\( {0,3}(\\d+)\\).+on.+by.+$",
         "type": "regex"
       },
       {
-        "pattern": "^.*[Cc]hanges\\s*(\\d+)\\'*.*$",
+        "pattern": "^.*[Cc]hanges\\s*( {0,3}\\d+)\\'*.*$",
         "type": "regex"
       }
     ]

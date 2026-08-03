@@ -121,6 +121,41 @@ function lotj.galaxyMap.log(text)
   cecho("[<cyan>LOTJ Galaxy Map<reset>] "..text.."\n")
 end
 
+-- Wroona = {
+--   government = "",
+--   system = "Wroona System",
+--   x = 71,
+--   y = 23
+-- }
+--
+-- ["Wroona System"] = {
+--   gov = "Blue",
+--   manual = false,
+--   name = "Wroona System",
+--   planets = { "Wroona" },
+--   x = 29,
+--   y = 35
+-- }
+function lotj.galaxyMap.gmcpToSysData()
+  local gmcp_data = gmcpVarByPath("Galaxy.Planets") or {}
+  if next(gmcp_data) == nil then return end
+
+  local systems = {}
+  for planetName, planetData in pairs(gmcp_data) do
+    lotj.galaxyMap.recordSystem(planetData.system, planetData.x, planetData.y, false)
+  end
+
+  for planetName, planetData in pairs(gmcp_data) do
+    lotj.galaxyMap.recordPlanet({
+      gov = planetData.government,
+      name = planetName,
+      system = planetData.system
+    })
+  end
+
+  lotj.galaxyMap.drawSystems()
+end
+
 function lotj.galaxyMap.setShipGalCoords()
   if not gmcp.Ship then return end
   if not gmcp.Ship.System then return end
@@ -557,10 +592,8 @@ end
 -- TODO:
 -- Even if there is no GMCP data, we should still draw the player's location
 function lotj.galaxyMap.drawSystems()
-  lotj.chat.debugLog("Drawing galaxy systems...")
   if lotj.layout and lotj.layout.upperRightTabData and lotj.layout.upperRightTabData.selectedTab ~= "galaxy" then
     lotj.galaxyMap.pendingDraw = true
-    lotj.chat.debugLog("Skipping galaxy map draw - different tab selected.")
     return
   end
   lotj.galaxyMap.pendingDraw = false
@@ -568,7 +601,6 @@ function lotj.galaxyMap.drawSystems()
   local gmcp_data = gmcpVarByPath("Galaxy.Systems") or {}
   if next(gmcp_data) == nil then
     if not io.exists(gmcpDataFileName) then
-      lotj.chat.debugLog("No GMCP data available.")
       return
     end
     table.load(gmcpDataFileName, gmcp_data)
@@ -842,17 +874,7 @@ function lotj.galaxyMap.coordRange()
   local minY = 0
   local maxY = 0
 
-  local systems = {}
-
-  for _, system in pairs(lotj.galaxyMap.systems) do
-    table.insert(systems, system)
-  end
-
-  for _, system in pairs(lotj.galaxyMap.recorded) do
-    table.insert(systems, system)
-  end
-
-  for _, system in ipairs(systems) do
+  for _, system in pairs(lotj.galaxyMap.data.systems) do
     if minX > system.x then
       minX = system.x
     end
