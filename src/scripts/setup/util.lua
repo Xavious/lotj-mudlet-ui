@@ -34,7 +34,7 @@ function gmcpVarByPath(varPath)
       return nil
     end
   end
-  return temp
+  return table.deepcopy(temp)
 end
 
 -- Handles matching argument text to a list of subcommands.

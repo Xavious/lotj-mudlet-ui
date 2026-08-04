@@ -121,41 +121,6 @@ function lotj.galaxyMap.log(text)
   cecho("[<cyan>LOTJ Galaxy Map<reset>] "..text.."\n")
 end
 
--- Wroona = {
---   government = "",
---   system = "Wroona System",
---   x = 71,
---   y = 23
--- }
---
--- ["Wroona System"] = {
---   gov = "Blue",
---   manual = false,
---   name = "Wroona System",
---   planets = { "Wroona" },
---   x = 29,
---   y = 35
--- }
-function lotj.galaxyMap.gmcpToSysData()
-  local gmcp_data = gmcpVarByPath("Galaxy.Planets") or {}
-  if next(gmcp_data) == nil then return end
-
-  local systems = {}
-  for planetName, planetData in pairs(gmcp_data) do
-    lotj.galaxyMap.recordSystem(planetData.system, planetData.x, planetData.y, false)
-  end
-
-  for planetName, planetData in pairs(gmcp_data) do
-    lotj.galaxyMap.recordPlanet({
-      gov = planetData.government,
-      name = planetName,
-      system = planetData.system
-    })
-  end
-
-  lotj.galaxyMap.drawSystems()
-end
-
 function lotj.galaxyMap.setShipGalCoords()
   if not gmcp.Ship then return end
   if not gmcp.Ship.System then return end
@@ -181,11 +146,11 @@ local function container()
 end
 
 local govColorList = {}
-table.insert(govColorList, "#E69F00")
 table.insert(govColorList, "#56B4E9")
 table.insert(govColorList, "#009E73")
-table.insert(govColorList, "#F0E442")
 table.insert(govColorList, "#D55E00")
+table.insert(govColorList, "#E69F00")
+table.insert(govColorList, "#F0E442")
 table.insert(govColorList, "#CC79A7")
 
 function lotj.galaxyMap.recordSystem(name, x, y)
@@ -611,6 +576,7 @@ function lotj.galaxyMap.drawSystems()
   -- Create a System -> Planets hierarchy
   lotj.galaxyMap.systems = {}
   lotj.galaxyMap.governments = {}
+  lotj.galaxyMap.govToColor = {}
 
   for systemName, system in pairs(gmcp_data) do
     system.planets = lotj.galaxyMap.getSystemPlanets(system)
@@ -619,13 +585,14 @@ function lotj.galaxyMap.drawSystems()
     lotj.galaxyMap.governments[system.planet.government] = true
   end
 
-  -- display(lotj.galaxyMap.systems)
-
   -- Establish government colors
+  lotj.galaxyMap.govToColor["A Neutral Government"] = "#AAAAAA"
   local flag = 1
   for gov, _ in pairs(lotj.galaxyMap.governments) do
-    lotj.galaxyMap.govToColor[gov] = lotj.galaxyMap.govToColor[gov] or govColorList[flag]
-    flag = flag + 1
+    if gov ~= "A Neutral Government" then
+      lotj.galaxyMap.govToColor[gov] = govColorList[flag]
+      flag = flag + 1
+    end
   end
 
   local minX, _, _, maxY = lotj.galaxyMap.coordRange()
@@ -874,7 +841,7 @@ function lotj.galaxyMap.coordRange()
   local minY = 0
   local maxY = 0
 
-  for _, system in pairs(lotj.galaxyMap.data.systems) do
+  for _, system in pairs(lotj.galaxyMap.systems) do
     if minX > system.x then
       minX = system.x
     end
