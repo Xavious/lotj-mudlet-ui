@@ -24,6 +24,16 @@
     "script": "lotj.mapper.setCurrentShipName(matches.ship_name)"
   },
   {
+    "name": "exit-ship",
+    "patterns": [
+      {
+        "pattern": "^You exit the ship\\.$",
+        "type": "regex"
+      }
+    ],
+    "script": "lotj.mapper.setCurrentShipName(nil)"
+  },
+  {
     "name": "room-amenities",
     "patterns": [
       {
