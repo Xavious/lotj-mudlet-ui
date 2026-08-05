@@ -23,7 +23,7 @@ When flying in a system, triggers capture radar output and draw a visual represe
 
 ![Image of UI with ground map](https://raw.githubusercontent.com/LotJ/lotj-mudlet-ui/main/images/galaxy-map.png)
 
-After initializing it by running various in-game commands, this map will show all publicly listed starsystems, including coloring each government's planets differently. It will also attempt to highlight your current system when known, although that only works while in space.
+The galaxy map will show all publicly listed starsystems, including coloring each government's planets differently. It will also attempt to highlight your current system when known.
 
 ### Chat windows
 
