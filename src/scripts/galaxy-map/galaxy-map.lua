@@ -613,9 +613,12 @@ function lotj.galaxyMap.drawSystems()
 
   -- Add systems from gmcp to systems to draw
   for _, system in pairs(lotj.galaxyMap.systems) do
-    table.insert(systemsToDraw, table.deepcopy(system))
-    if system.x == lotj.galaxyMap.currentX and system.y == lotj.galaxyMap.currentY then
-      foundCurrentLocation = true
+    -- Ignore special systems placed at nonsensical locations
+    if not lotj.galaxyMap.outOfBounds(system) then
+      table.insert(systemsToDraw, table.deepcopy(system))
+      if system.x == lotj.galaxyMap.currentX and system.y == lotj.galaxyMap.currentY then
+        foundCurrentLocation = true
+      end
     end
   end
 
@@ -842,20 +845,28 @@ function lotj.galaxyMap.coordRange()
   local maxY = 0
 
   for _, system in pairs(lotj.galaxyMap.systems) do
-    if minX > system.x then
-      minX = system.x
-    end
-    if maxX < system.x then
-      maxX = system.x
-    end
-    if minY > system.y then
-      minY = system.y
-    end
-    if maxY < system.y then
-      maxY = system.y
+    if not lotj.galaxyMap.outOfBounds(system) then
+      if minX > system.x then
+        minX = system.x
+      end
+      if maxX < system.x then
+        maxX = system.x
+      end
+      if minY > system.y then
+        minY = system.y
+      end
+      if maxY < system.y then
+        maxY = system.y
+      end
     end
   end
 
   -- Pad all values by 10 to ensure points are displayed reasonably.
   return minX-10, maxX+10, minY-10, maxY+10
+end
+
+-- Determine whether we should ignore a system. This is mostly to catch weird imm planets way
+-- off the map so they don't throw off the map layout.
+function lotj.galaxyMap.outOfBounds(system)
+  return system.x < -200 or system.x > 200 or system.y < -200 or system.y > 200
 end
