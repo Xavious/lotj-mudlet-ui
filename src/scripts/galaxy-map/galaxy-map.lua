@@ -679,6 +679,7 @@ function lotj.galaxyMap.drawSystems()
     else
       point:show()
     end
+    point:raise()
 
     -- Build menu items based on system properties
     local menuItems = {"Calculate Route"}
@@ -775,6 +776,7 @@ function lotj.galaxyMap.drawSystems()
     -- Use government color for the label
     local labelColor = lotj.galaxyMap.govToColor[system.planet.government] or "#AAAAAA"
     label:echo(labelText, labelColor, fontSize.."c")
+    label:raise()
 
     -- Add hover effect for manually added systems
     if system.manual then
