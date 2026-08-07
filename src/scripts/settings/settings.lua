@@ -375,7 +375,6 @@ local primaryConfigDefinition = {
 
 -- OS dependent settings
 if os == "linux" then
-  disableKey("lotj-ui_retreat-windows")
   table.insert(primaryConfigDefinition.categories[2].items,
     {
       name = "Retreat",
@@ -390,7 +389,6 @@ if os == "linux" then
     }
   )
 elseif os == "windows" then
-  disableKey("lotj-ui_retreat-linux")
   table.insert(primaryConfigDefinition.categories[2].items,
     {
       name = "Retreat",
@@ -404,11 +402,22 @@ elseif os == "windows" then
       end
     }
   )
-else
-  disableKey("lotj-ui_retreat-linux")
-  disableKey("lotj-ui_retreat-windows")
 end
 
+-- Apply OS dependent settings
+local function applyOSSettings()
+  local OS = getOS()
+  if OS == "linux" then
+    disableKey("lotj-ui_retreat-windows")
+  elseif OS == "windows" then
+    disableKey("lotj-ui_retreat-linux")
+  else
+    disableKey("lotj-ui_retreat-linux")
+    disableKey("lotj-ui_retreat-windows")
+  end
+end
+
+lotj.setup.registerEventHandler("lotjUiLoaded", applyOSSettings)
 
 local mainStyle = {
   window = {
