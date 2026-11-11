@@ -11,7 +11,7 @@
         "type": "regex"
       },
       {
-        "pattern": "^\"?(?<speaker>.+?)\"? (?:(?<adverb>\\w+ly) )?(?<speak>says|whispers|exclaims|asks|yells|radios) ?(?:to|at)? ?(?<target>[-0-9a-zA-Z' ]+)?(?:, in (?<language>[a-zA-Z' ]+))?(?: '(?<text>.+)')$",
+        "pattern": "^\"?(?<speaker>.+?)\"? (?:(?<adverb>\\w+ly) )?(?<speak>says|whispers|exclaims|asks|yells|radios),? ?(?:to|at)? ?(?<target>[-0-9a-zA-Z' ]+)?(?:, in (?<language>[a-zA-Z' ]+))?(?: '(?<text>.+)')$",
         "type": "regex"
       },
       {
