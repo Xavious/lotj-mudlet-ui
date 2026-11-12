@@ -151,13 +151,12 @@ function lotj.infoPanel.createBasicStats(container)
   lotj.setup.registerEventHandler("gmcp.Char.Vitals", function()
     if not gmcp.Char or not gmcp.Char.Vitals then return end
 
-    local health = gmcp.Char.Vitals.hp
     local healthMax = gmcp.Char.Vitals.maxHp
     local wimpy = gmcp.Char.Vitals.wimpy
     if healthMax and healthMax > 0 then
-      if wimpy > 0 and health > 0 and wimpy < health then
+      if wimpy and wimpy > 0 and wimpy < healthMax then
         wimpyBar:show()
-        wimpyBar:move(math.floor(wimpy*100/health).."%", nil)
+        wimpyBar:move(math.floor(wimpy*100/healthMax).."%", nil)
       else
         wimpyBar:hide()
       end
