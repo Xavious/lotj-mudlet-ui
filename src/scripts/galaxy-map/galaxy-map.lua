@@ -115,6 +115,8 @@ function lotj.galaxyMap.setup()
   lotj.setup.registerEventHandler("gmcp.Galaxy.Systems", lotj.galaxyMap.drawSystems)
   -- This seems necessary when recreating the UI after upgrading the package.
   lotj.galaxyMap.container:raiseAll()
+  -- Points and labels kept from before a reinstall also need raising once, on the next draw.
+  lotj.galaxyMap.needsRaise = true
 end
 
 function lotj.galaxyMap.log(text)
@@ -598,6 +600,9 @@ function lotj.galaxyMap.drawSystems()
     return
   end
   lotj.galaxyMap.pendingDraw = false
+  -- raise() puts a label above everything in the main window, not just the map, and this
+  -- runs on every ship position update, so only raise after setup or for new labels.
+  local raiseExisting = lotj.galaxyMap.needsRaise
 
   local gmcp_data = gmcpVarByPath("Galaxy.Systems") or {}
   if next(gmcp_data) == nil then
@@ -712,10 +717,13 @@ function lotj.galaxyMap.drawSystems()
       point = Geyser.Label:new({name="galaxyMap_"..system.name, width=pointSize, height=pointSize}, container())
       stylePoint(point, system.planet.government, false, planetImage, pointSize, nil, nil, system.x, system.y)
       lotj.galaxyMap.systemPoints[system.name] = point
+      point:raise()
     else
       point:show()
+      if raiseExisting then
+        point:raise()
+      end
     end
-    point:raise()
 
     -- Build menu items based on system properties
     local menuItems = {"Calculate Route"}
@@ -807,15 +815,18 @@ function lotj.galaxyMap.drawSystems()
       ]])
 
       lotj.galaxyMap.systemLabels[system.name] = label
+      label:raise()
     else
       label:resize(labelWidth, labelHeight)
       label:show()
+      if raiseExisting then
+        label:raise()
+      end
     end
 
     -- Use government color for the label
     local labelColor = lotj.galaxyMap.govToColor[system.planet.government] or "#AAAAAA"
     label:echo(labelText, labelColor, fontSize.."c")
-    label:raise()
 
     -- The shared hover callbacks in stylePoint reveal manual system names.
     if system.manual then
@@ -843,6 +854,7 @@ function lotj.galaxyMap.drawSystems()
     local labelX = sysX + (pointSize/2) - (labelWidth/2)
     label:move(math.max(labelX, 0), sysY+pointSize)
   end
+  lotj.galaxyMap.needsRaise = false
 end
 
 -- Returns X starting point, Y starting point, and pixels per coordinate
